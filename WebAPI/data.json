@@ -1,0 +1,169 @@
+{
+  "Users": [
+    {
+      "Id": 1,
+      "UserName": "haloBro"
+    },
+    {
+      "Id": 2,
+      "UserName": "tina"
+    },
+    {
+      "Id": 3,
+      "UserName": "papp"
+    },
+    {
+      "Id": 4,
+      "UserName": "gabi"
+    },
+    {
+      "Id": 5,
+      "UserName": "gabika"
+    },
+    {
+      "Id": 6,
+      "UserName": "kevo"
+    },
+    {
+      "Id": 7,
+      "UserName": "kevin"
+    },
+    {
+      "Id": 8,
+      "UserName": "tina1"
+    },
+    {
+      "Id": 9,
+      "UserName": "adrian"
+    },
+    {
+      "Id": 10,
+      "UserName": "halo"
+    },
+    {
+      "Id": 11,
+      "UserName": "halo1"
+    },
+    {
+      "Id": 12,
+      "UserName": "patrik"
+    },
+    {
+      "Id": 13,
+      "UserName": "pappUser"
+    },
+    {
+      "Id": 14,
+      "UserName": "aleksandraAdamc"
+    },
+    {
+      "Id": 15,
+      "UserName": "kokok"
+    },
+    {
+      "Id": 16,
+      "UserName": "andreea"
+    }
+  ],
+  "Todos": [
+    {
+      "Id": 12,
+      "Owner": {
+        "Id": 5,
+        "UserName": "gabika"
+      },
+      "Title": "Test Pop Up ",
+      "IsCompleted": false
+    },
+    {
+      "Id": 6,
+      "Owner": {
+        "Id": 3,
+        "UserName": "papp"
+      },
+      "Title": "task105",
+      "IsCompleted": false
+    },
+    {
+      "Id": 7,
+      "Owner": {
+        "Id": 7,
+        "UserName": "kevin"
+      },
+      "Title": "test edit ",
+      "IsCompleted": false
+    },
+    {
+      "Id": 13,
+      "Owner": {
+        "Id": 2,
+        "UserName": "tina"
+      },
+      "Title": "test pop",
+      "IsCompleted": false
+    },
+    {
+      "Id": 16,
+      "Owner": {
+        "Id": 2,
+        "UserName": "tina"
+      },
+      "Title": "do yur laundry",
+      "IsCompleted": false
+    },
+    {
+      "Id": 4,
+      "Owner": {
+        "Id": 1,
+        "UserName": "haloBro"
+      },
+      "Title": "watch netflix:) ",
+      "IsCompleted": false
+    },
+    {
+      "Id": 17,
+      "Owner": {
+        "Id": 7,
+        "UserName": "kevin"
+      },
+      "Title": "cook pasta bro",
+      "IsCompleted": true
+    },
+    {
+      "Id": 2,
+      "Owner": {
+        "Id": 7,
+        "UserName": "kevin"
+      },
+      "Title": "edit now with P",
+      "IsCompleted": false
+    },
+    {
+      "Id": 9,
+      "Owner": {
+        "Id": 2,
+        "UserName": "tina"
+      },
+      "Title": "task",
+      "IsCompleted": true
+    },
+    {
+      "Id": 10,
+      "Owner": {
+        "Id": 2,
+        "UserName": "tina"
+      },
+      "Title": "task",
+      "IsCompleted": true
+    },
+    {
+      "Id": 15,
+      "Owner": {
+        "Id": 11,
+        "UserName": "halo1"
+      },
+      "Title": "nananan",
+      "IsCompleted": true
+    }
+  ]
+}

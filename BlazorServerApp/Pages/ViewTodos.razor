@@ -1,0 +1,188 @@
+﻿@page "/ViewTodos"
+@using Domain.Models
+@using HttpClients.ClientInterfaces
+@using UIComponents
+@using Domain.DTOs
+@inject ITodoService todoService
+@inject NavigationManager navMgr
+
+<h3 style="text-align: center">Todos</h3>
+
+<div class="filter-bar">
+    <div class="filters-container">
+        <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
+        @if (doShowFilters)
+        {
+            <div class="filter">
+                <label>Username:</label>
+                <input type="text" @bind="usernameFilter"/>
+            </div>
+            <div class="filter">
+                <label>User id:</label>
+                <input type="number" @bind="userIdFilter"/>
+            </div>
+            <div class="filter">
+                <label>Is completed?</label>
+                
+                 @* If all is selected, this filter will not be used. *@
+                <select @bind="completedStatusFilter">
+                    <option value="all">All</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="filter">
+                <label>Title contains:</label>
+                <input type="text" @bind="titleContainsFilter"/>
+            </div>
+        }
+    </div>
+</div>
+
+<div>
+    <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="LoadTodos">Load Todos</MudButton>
+</div>
+
+@if (todos == null)
+{
+}
+else if (!todos.Any())
+{
+    <p>No Todos to display</p>
+}
+else
+{
+    <MudTable Items="@todos" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Owner Id</MudTh>
+            <MudTh>Owner Username</MudTh>
+            <MudTh>Todo Title</MudTh>
+            <MudTh>Is Completed?</MudTh>
+            <MudTh>Edit</MudTh>
+            <MudTh>Delete?</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="OwnderId">@context.Owner.Id</MudTd>
+            <MudTd DataLabel="UserName">@context.Owner.UserName</MudTd>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="Status">
+                <FancyCheckBox IsCompleted="@context.IsCompleted" OnChange="@((status) => CompleteTodo(context, status))"/>
+            </MudTd>
+            <MudTd DataLabel="Edit">
+                @* @onclick="@(() => navMgr.NavigateTo($"/EditTodo/{context.Id}"))" *@
+                @* @onclick="@(() => OpenUpdateTodo(context.Id))" *@
+                <img src="icons/edit.gif" class="funnel"   @onclick="@(() => LoadPopUp(context.Id))"  />
+            </MudTd>
+            <MudTd>
+                <img src = "icons/delete.gif" class="icon" @onclick="@(() => RemoveTodo(context.Id) )"/>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    
+    <Modal ShowModal="showModal" >
+        <EditTodoComponent Id = "id" OnChange=@(async ()=> { showModal = false; await LoadTodos();})>
+            
+        </EditTodoComponent>
+    </Modal>
+    
+}
+
+@if (!string.IsNullOrEmpty(msg))
+{
+    <label style="color: red">@msg</label>
+}
+
+@code {
+    private int id;
+    private bool showModal;
+    private IEnumerable<Todo>? todos;
+    private TodoUpdateDTO dto; 
+    private string msg = "";
+    private bool doShowFilters = false;
+
+    private string? usernameFilter;
+    private int? userIdFilter;
+    private string? completedStatusFilter;
+    private string? titleContainsFilter;
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private void LoadPopUp(int id)
+    {
+        this.id = id;
+        showModal = true;
+    }
+
+    private async Task LoadTodos()
+    {
+        try
+        {
+            bool? completedFilterValue = null;
+
+            if (!string.IsNullOrEmpty(completedStatusFilter) && !completedStatusFilter.Equals("all"))
+            {
+                completedFilterValue = bool.Parse(completedStatusFilter);
+            }
+            todos = await todoService.GetAsync(usernameFilter , userIdFilter, completedFilterValue,titleContainsFilter);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+    
+    private async Task CompleteTodo(Todo item, bool status)
+    {
+        TodoUpdateDTO dto = new(item.Id)
+        {
+            IsCompleted = status
+        };
+    
+        try
+        {
+            await todoService.UpdateAsync(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+    
+    private async Task RemoveTodo(int todoId)
+    {
+        msg = "";
+        try
+        {
+            
+            bool? result = await DialogService.ShowMessageBox(
+                "Warning", 
+                "Deleting can not be undone!", 
+                yesText:"Delete!", cancelText:"Cancel");
+
+            if (result is true)
+            {
+                await todoService.DeleteAsync(todoId);
+        
+                var list = new List<Todo>(todos!);
+                list.RemoveAll(todo => todo.Id == todoId);
+                todos = list.AsEnumerable();
+            }
+            
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+    
+    
+    
+    
+    
+}
